@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="img/public.css" />
+		<link rel="stylesheet" href="img/register.css" />
+		<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+		<script>
+			$(function() {
+				$(".rg_btn").click(function() {
+					var username = $(".username").val();
+					var psw = $(".psw").val();
+					var aj = $.ajax({
+						url: '/regist_user',
+						type: 'post',
+						data: JSON.stringify({
+							'username': username,
+							'password': psw
+						}),
+						contentType: 'application/json;charset=utf-8',
+						dataType: 'json',
+						success: function(data) {
+							if (data['status'] == 'ok') {
+								location.href = 'login.html';
+							} else {
+								alert(data['status']);
+							}
+							//							
+						},
+						error: function(data) {
+							// view("异常！");  
+							alert("异常！" + data);
+						}
+					});
+				})
+				$('.back').click(function() {
+					location.href = "login.html"
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<h2 class="index"><a href="login.html">首页</a></h2>
+		<div class="register_box">
+			<p>注册</p>
+			<br />
+			<br />
+			<div class="register">
+				用户名:
+				<input class="username" type="text" />
+				<br />
+				<br /> 密码:　
+				<input class="psw" type="text" />
+				<br />
+				<br />
+				<input class="rg_btn btn_style" type="submit" value="注册" />
+				<input class="back btn_style" type="button" value="返回" />
+			</div>
+		</div>
+	</body>
+
+</html>

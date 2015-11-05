@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="img/index.css" />
+		<link rel="stylesheet" href="img/public.css" />
+		<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="js/base64.js">
+		</script>
+		<script type="text/javascript">
+			$(function() {
+				var flag = "";
+				var dataFlag = "";
+				var flagUsername = "";
+				var friendIdFlag = null;
+				var user_info = null;
+				var myfriend_list = [];
+				var mymsg_list = [];
+				var myTime = new Date();
+				//				function getJsonObjLength(jsonObj) {
+				//					var Length = 0;
+				//					for (var item in jsonObj) {
+				//						Length++;
+				//					}
+				//					return Length;
+				//				}
+				function AddStrToBody(str) {
+						var op = document.createElement("p");
+						var oText = document.createTextNode(str);
+						op.appendChild(oText);
+						document.body.appendChild(op);
+					}
+					//WEBSocket链接
+				var ws = new WebSocket("ws://192.168.20.147:7001/");
+				var output;
+				window.addEventListener("load", init, false);
+
+				function init() {
+					output = document.getElementById("output");
+					WebSocketTest();
+				}
+
+				function WebSocketTest() {
+						if ("WebSocket" in window) {
+							//alert("WebSocket is supported by your Browser!");
+							// Let us open a web socket
+							ws.onopen = function() {
+								// Web Socket is connected, send data using send()
+								console.log("连接成功！")
+								ws.send('{"username":"' + sessionStorage['username'] + '", "password":"' + sessionStorage['password'] + '", "channel":"ichat"}');
+							};
+							ws.onmessage = function(evt) {
+								mymsg_list = evt.data
+								console.log(mymsg_list);
+								Message(mymsg_list);
+							};
+							ws.onclose = function(data) {
+								// websocket is closed.
+								alert("Connection is closed...");
+							};
+						} else {
+							// The browser doesn't support WebSocket
+							alert("WebSocket NOT supported by your Browser!");
+						}
+					}
+					//				function onOpen() {
+					//					console.log("连接成功！")
+					//					doSend(data);
+					//				}
+					//选择好友函数
+
+				function changeFriend(id) {
+						$.ajax({
+							type: "post",
+							url: "/get_chat_msg_by_count",
+							data: JSON.stringify({
+								"friend_id": id,
+								"offset": "0",
+								"size": "20"
+							}),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function(data) {
+								if (data['status'] == 'ok') {
+									var len = data["msg_list"].length;
+									if (len == 0) {
+										$('.msg_text').text("")
+									} else {
+										console.log(data);
+										for (var i = len - 1; i >= 0; i--) {
+											//												var receiver_id = data['msg_list'][i]['receiver_id']; //接受者id
+											//												var send_id = data['msg_list'][i]['sender_id']; //发送者id
+											if (data['msg_list'][i]['receiver_id'] == user_info.user_id) {
+												$('.msg_text').append("<div class='msg_my_style'>" + "<div class='msg_fr'>" + "<div class='arrow'></div>" + "<div class='remsg'>" + Base64.decode(data['msg_list'][i]['data']) +
+													"</div>" + "</div>" + "<br />" + "</div>");
+											} else if (data['msg_list'][i]['sender_id'] == user_info.user_id) {
+												$('.msg_text').append("<div class='msg_my_style'>" + "<div class='msg_my'>" + "<div class='arrow'></div>" + "<div class='remsg'>" + Base64.decode(data['msg_list'][i]['data']) +
+													"</div>" + "</div>" + "<br />" + "</div>");
+											}
+										}
+										$('.msg_text').scrollTop($('.msg_text')[0].scrollHeight);
+									}
+								} else {
+									console.log(data);
+								}
+							}
+						});
+					}
+					//消息函数
+
+				function Message(data) {
+						if (typeof(data) == String) {
+							var aa = JSON.parse(data);
+							var x = aa['sender_id'];
+							friendIdFlag = aa;
+						} else {
+							var aa = data;
+							var x = friendIdFlag;
+						}
+						var lens = myfriend_list["friend_list"].length;
+						for (var i = 0; i < lens; i++) {
+							var k = myfriend_list["friend_list"][i]["friend_id"];
+							if (x === k) {
+								changeFriend(k);
+							}
+						}
+					}
+					//推送盒子函数
+
+				function showPushbox() {
+					$('.push_box').animate({
+						bottom: "0px"
+					});
+				}
+				$(document).keydown(function(event) {
+					if (event.keyCode == 13) {
+						$('.send_btn').click();
+					}
+				});
+				//得到用户信息
+				$.ajax({
+					url: '/get_user_info',
+					type: 'post',
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function(data) {
+						console.log(data);
+						$('.h3').text(data.username);
+						$('.title_text').text("未选择聊天");
+						//						var len = data.length;
+						flagUsername = data.username;
+						user_info = data;
+					},
+					error: function(data) {
+						// view("异常！");  
+						alert("异常！");
+					}
+				});
+				//得到添加好友响应
+				$.ajax({
+					url: '/get_add_friend_req',
+					type: 'post',
+					data: JSON.stringify({
+						"type": "unprocessed", //unprocessed ,processed, all
+						"owner": "others", //others myself
+						"offset": "0", //
+						"size": "100" //
+					}),
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function(data) {
+						if (data['status'] == 'ok') {
+							var len = data['add_friend_req_list'].length;
+							if (len !== 0) {
+								var name = data['add_friend_req_list']['0'].requester_name;
+								var msg = data['add_friend_req_list']['0'].msg;
+								var req_id = data['add_friend_req_list']['0'].req_id;
+								showPushbox();
+								console.log(data);
+								flag = req_id;
+								data = name;
+								$('.push_box').append('<span class="addf_r_list">' + 'username :' + name + '<br />' + '想要加你为好友' + '<br />' + '消息 :' + msg + '</span>' + '<br />')
+							}
+						} else {
+							console.log(data);
+						}
+					},
+					error: function(data) {
+						alert("异常！");
+					}
+				});
+				//得到好友列表
+				function getFriendList() {
+					$.ajax({
+						type: "post",
+						url: "/get_friend_list",
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function(data) {
+							if (data['status'] == 'ok') {
+								console.log(data);
+								myfriend_list = data;
+								var len = data['friend_list'].length;
+								dataFlag = data;
+								$('.ul_touch>ul').remove('li');
+								for (var i = 0; i < len; i++) {
+									//data['friend_list']['a'].friendId;
+									$('.ul_touch>ul').append('<li>' + '<div class="user">' + '<img src="" />' + '</div>' + '<div class="info">' + '<h3>' + data['friend_list'][i].username + '</h3>' + '</div>' + '<span class="delfriend">' + '<img src="img/del.png" />' + '</span>' + '</li>');
+								}
+								//								var id = data['friend_list']['a'].friendId;
+								//								var notename = data['friend_list']['0'].note_name;
+								//								var username = data['friend_list']['0'].username;
+								//								data = username;
+								//								$('.ul_touch>ul').append('<li>'+'<div class="user">' + '<img src="" />' + '</div>' + '<div class="info">' + '<h3>' + data['friend_list']['a'].username + '</h3>' + '</div>'+'</li>')
+							} else {
+								console.log(data);
+							}
+						},
+						error: function(data) {
+							alert("异常！");
+						}
+					});
+				}
+				getFriendList();
+				//				//好友数据
+				//						function get_friend_info(dataFlag)
+				//			{	
+				//				var len=dataFlag['friend_list'].length
+				//				for(var i =0;i<len;i++)
+				//				{
+				//					friend_list=friend_list+dataFlag[i].friend_id;
+				//				}
+				//				console.log(friend_list);
+				//			}
+				//<!---------左边样式--------->
+				$('#left .tab ul>li').click(function() {
+						$('#left div').removeClass('current');
+						$('.tab img').removeClass('imgborder');
+						var tabNum = $('#left .tab ul>li').index(this);
+						if (tabNum == 2) {
+							$('#left div.ul_talk').addClass('current');
+							$('.tab_talk img').addClass('imgborder');
+						}
+						if (tabNum == 1) {
+							$('#left div.ul_chat').addClass('current');
+							$('.tab_chat img').addClass('imgborder');
+						}
+						if (tabNum == 0) {
+							$('#left div.ul_touch').addClass('current');
+							$('.tab_touch img').addClass('imgborder');
+						}
+					})
+					//注销/退出
+				$('.exit').click(function() {
+					var aj = $.ajax({
+						url: '/logout',
+						method: 'get',
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function(data) {
+							alert("退出登录！");
+							location.href = "login.html"
+						},
+						error: function(data) {
+							alert("异常！");
+						}
+					});
+				});
+				//添加和关闭好友盒子
+				$('.addFriend').click(function() {
+					$('.addF_box').slideDown();
+				})
+				$('.close').click(function() {
+						$('.addF_box').slideUp();
+					})
+					//查询好友函数
+
+				function findfriend(data) {
+						var len = data['user_list'].length
+						$(".find_list").children().remove();
+						for (i = 0; i < len; i++) {
+							var user_id = data['user_list'][i]['user_id']
+							var username = data['user_list'][i]['username']
+							$(".find_list").append('<span class="span">' + '　username　' + '　:　' + username + '　　|　　' + 'userid　　' + '　:' + user_id + '</span>' + '<br>')
+						}
+					}
+					//查询好友
+				$('.sechf_btn').click(function() {
+					var addtext = $('.add_text_id').val();
+					$.ajax({
+						type: "post",
+						url: "/find_user",
+						data: JSON.stringify({
+							'username': addtext
+						}),
+						dataType: 'json',
+						contentType: 'application/json',
+						success: function(data) {
+							if (data['status'] == 'ok') {
+								var obj = JSON.stringify(data);
+								findfriend(data);
+							}
+						},
+						error: function(data) {
+							alert("异常！");
+						}
+					});
+				});
+				//	获取赋值全局变量
+				$(document).on("click", ".span", function() {
+					var aa = $(this).text().split(":")[2];
+					console.log(aa);
+					flag = aa;
+					//				 console.log(flag);
+				});
+				//添加好友
+				$('.addf_btn').click(function(data) {
+						var addf = $('.add_text_text').val();
+						//					var userid=$('.title_text').text(data.user_id);
+						console.log(addf);
+						console.log(flag);
+						$.ajax({
+							type: "post",
+							url: "/add_friend_req",
+							data: JSON.stringify({
+								'invitee_id': flag,
+								'msg': addf
+							}),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function(data) {
+								if (data['status'] == 'ok') {
+									alert("添加好友请求成功！")
+									getFriendList();
+								} else {
+									console.log(data);
+								}
+							},
+							error: function(data) {
+								alert("异常！");
+							}
+						});
+					})
+					//关闭pushBox
+
+				function colsePushBox() {
+						$('.closeimg').click(function() {
+							$('.push_box').animate({
+								bottom: "-150px"
+							})
+						})
+					}
+					//删除好友
+				$(document).on('click', '.delfriend', function() {
+						var index = $('.ul_touch>ul>li>span').index(this);
+						var friend = dataFlag['friend_list'][index].friendId;
+						var username = dataFlag['friend_list'][index].username;
+						//					console.log(friend);
+						$(this).parent('li').remove();
+						$.ajax({
+							type: "post",
+							url: "/remove_friend",
+							data: JSON.stringify({
+								"friend_id": friend //require
+							}),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function(data) {
+								if (data['status'] == 'ok') {
+									$(this).parent('li').remove();
+									alert(username + '好友已删除');
+									getFriendList();
+								} else {
+									console.log(data);
+								}
+							},
+							error: function(data) {
+								alert("异常！");
+							}
+						});
+					})
+					//确定添加好友
+				$('span.add_yes').click(function(data) {
+						console.log(flag);
+						$.ajax({
+							type: "post",
+							url: "/res_add_friend_req",
+							data: JSON.stringify({
+								"req_id": flag,
+								"result": "yes" //yes no
+							}),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function(data) {
+								if (data['status'] == 'ok') {
+									alert("添加成功！");
+									$('.push_box').animate({
+										bottom: "-150px"
+									});
+									$('.ul_touch>ul>li').append('<div class="user">' + '<img src="" />' + '</div>' + '<div class="info">' + '<h3>' + name + '</h3>' + '</div>')
+									getFriendList();
+								} else {
+									console.log(data);
+								}
+							},
+							error: function(data) {
+								alert("异常！");
+							}
+						});
+					})
+					//发送消息
+
+				function sendMsg() {
+					$('.rf_send').click(function() {
+						WebSocketTest();
+						var msg = $('.sendtext').val();
+						var index = $('.ul_touch>ul>li').index();
+						var friend_id = dataFlag['friend_list'][index].friend_id;
+						console.log(msg);
+						if (friend_id == null) {
+							alert("请选择好友");
+						} else {
+							$.ajax({
+								type: "post",
+								url: "/send_msg",
+								data: JSON.stringify({
+									"group_id": "",
+									"receiver_id": [friend_id],
+									"data": Base64.encode(msg), //base64 encode
+									"extra": "" //base64 encode
+								}),
+								dataType: 'json',
+								contentType: 'application/json',
+								success: function(data) {
+									if (data['status'] == 'ok') {
+										console.log(data);
+										var msg = $('.sendtext').val();
+										var index = $('.ul_touch>ul>li').index();
+										var req = friendIdFlag + "<br />" + msg + "<br />";   
+										$('.sendtext').val("");
+										$('.msg_text').append("<div class='msg_my'><i>" + "<br />" + user_info.username + "<br />" + myTime.toLocaleTimeString() + "</i>" + "<br />" + "<div>" + msg + "</div>" + "</div>" + "<br />");
+										$('.msg_text').scrollTop($('.msg_text')[0].scrollHeight);  
+										ws.send(req);
+									}
+								},
+								error: function(data) {
+									alert("异常！");
+								}
+							});
+						}
+					})
+				}
+				sendMsg();
+				//选择好友
+				$(document).on('click', '.ul_touch>ul>li', function() {
+						var index = $('.ul_touch>ul>li').index(this);
+						var friend_id = dataFlag['friend_list'][index].friend_id;
+						$('.title_text').text(dataFlag['friend_list'][index].username);
+						//得到聊天信息
+						$.ajax({
+							type: "post",
+							url: "/get_chat_msg_by_count",
+							data: JSON.stringify({
+								"friend_id": friend_id,
+								"offset": "0",
+								"size": "20"
+							}),
+							dataType: 'json',
+							contentType: 'application/json',
+							success: function(data) {
+								if (data['status'] == 'ok') {
+									friendIdFlag = friend_id;
+									Message(data);
+								}
+							}
+						});
+					})
+					//表情栏  
+				$(document).on('click', '.face', function() {
+					$('.rf_tool ul li div.face_box').slideDown(200);
+					$('.face').css({
+						'display': 'none'
+					});
+				});
+				$("body").click(function() {
+					$('.rf_tool ul li div.face_box').slideUp(200);
+					$('.face').css({
+						'display': 'block'
+					});
+				});
+				$('div.left_header div.user img').on("click",function(){
+					$("#headimg").fadeToggle();
+				})
+				//选择表情
+				//$('.face_box')
+				//						$.ajax({
+				//								type: "post",
+				//								url: "/downloadPublicFile/icon_id",
+				//								dataType: 'json',
+				//								contentType: 'application/json',
+				//								success: function(data) {
+				//									console.log(data);
+				//								}
+				//								});
+				//								
+				//								$('div.left_header div.user img').
+				//结尾			
+			});
+			 //上传图片函数
+			function uploadImage() {
+				//判断是否有选择上传文件
+				var imgPath = $('#uploadFile').val()
+				console.log(imgPath);
+				if (imgPath == "") {
+					alert("请选择上传图片！");
+					return;
+				}
+				//判断上传文件的后缀名
+				var strExtension = imgPath.substr(imgPath.lastIndexOf('.') + 1);
+				if (strExtension != 'jpg' && strExtension != 'gif' && strExtension != 'png' && strExtension != 'bmp') {
+					alert("请选择图片文件");
+					return;
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "/uploadPublic",
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify({
+							imgPath: $("#uploadFile").val()
+						}),
+						success: function(data) {
+							console.log(data);
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+							console.log(data);
+							alert("上传失败，请检查网络后重试");
+						}
+					});
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="push_box">
+			<span class="closeimg">
+				<img src="img/close_box.png"/>
+				
+			</span>
+			<div class="addtext">
+				<span class="add_yes addtt">YES</span>
+				<span class="add_no addtt">NO</span>
+			</div>
+
+		</div>
+		<div id="headimg">
+			<input type="file" id="uploadFile" runat="server" name="uploadFile" />
+			<input type="button" id="btnUpload" value="确定" onchange="" onclick="uploadImage()" />
+			<!--<div id="imgDiv">
+				<img src="img/loading.gif"  />
+			</div>-->
+		</div>
+		<div class="addF_box">
+			<!--//<span class="close_box">-->
+			<img class="close" src="img/close_box.png" />
+			<!--</span>-->
+			<div class="text_box">
+				好友ID：
+				<br />
+				<input type="text" class="add_text_id" />
+				<br />
+				<br /> 给ta留个话吧
+				<br />
+				<textarea class="add_text_text"></textarea>
+				<div class="find_list"></div>
+			</div>
+			<div class="add_btn">
+				<input class="addf_btn" type="button" value="添加好友" />
+				<input class="sechf_btn" type="button" value="搜索" />
+			</div>
+		</div>
+		<div id="main">
+
+			<div id="left">
+				<div class="left_header">
+					<div class="user">
+						<img src="" />
+					</div>
+					<div class="info">
+						<h3 class="h3">word</h3>
+					</div>
+					<div class="exit">
+						<img src="img/exit.png" alt="退出" title="退出" />
+					</div>
+				</div>
+				<hr />
+				<div class="left_search">
+					<span class="search_img">
+						<img src="img/seach.png" />
+					</span>
+					<input type="search" name="search" id="" placeholder="搜索" title="搜索" />
+					<div class="addFriend">
+						<img src="img/addF.png" alt="" title="添加好友" />
+					</div>
+				</div>
+				<div class="tab">
+					<ul>
+						<li>
+							<span class="tab_touch">
+								<img src="img/touch.png" title="好友列表"/>
+							</span>
+
+						</li>
+						<li>
+							<span class="tab_chat">
+								<img src="img/chat.png" title="群组"/>
+							</span>
+						</li>
+						<li>
+							<span class="tab_talk">
+								<img src="img/talk.png" title="ICHAT"/>
+							</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="ul_talk">
+					<ul>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name11</h3>
+							</div>
+						</li>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name11</h3>
+							</div>
+						</li>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name11</h3>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="ul_chat">
+					<ul>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name22</h3>
+							</div>
+						</li>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name22</h3>
+							</div>
+						</li>
+						<li>
+							<div class="user">
+								<img scr="" />
+							</div>
+							<div class="info">
+								<h3>name22</h3>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div class="ul_touch current">
+					<ul>
+
+					</ul>
+				</div>
+
+			</div>
+
+			<div id="right">
+
+				<div class="right_header">
+					<div class="right_header_title">
+						<div class="title_text">
+							name
+						</div>
+					</div>
+
+				</div>
+
+				<div class="right_body">
+					<div class="rb_text">
+						<div class="msg_text">
+
+						</div>
+					</div>
+				</div>
+				<div class="right_foot">
+					<div class="rf_tool">
+						<ul>
+							<li>
+								<div class="face_box">
+									<div class="face_div">
+										<ul>
+											<li>
+												<a href="#" code="/1/" title="">
+													<img src="img/facebox/1.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/2/" title="">
+													<img src="img/facebox/2.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/3/" title="">
+													<img src="img/facebox/3.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/4/" title="">
+													<img src="img/facebox/4.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/5/" title="">
+													<img src="img/facebox/5.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/6/" title="">
+													<img src="img/facebox/6.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/7/" title="">
+													<img src="img/facebox/7.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/8/" title="">
+													<img src="img/facebox/8.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/9/" title="">
+													<img src="img/facebox/9.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/10/" title="">
+													<img src="img/facebox/10.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/11/" title="">
+													<img src="img/facebox/11.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/12/" title="">
+													<img src="img/facebox/12.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/13/" title="">
+													<img src="img/facebox/13.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/14/" title="">
+													<img src="img/facebox/14.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/15/" title="">
+													<img src="img/facebox/15.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/16/" title="">
+													<img src="img/facebox/16.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/17/" title="">
+													<img src="img/facebox/17.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/18/" title="">
+													<img src="img/facebox/18.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/19/" title="">
+													<img src="img/facebox/19.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/20" title="">
+													<img src="img/facebox/20.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/21" title="">
+													<img src="img/facebox/21.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/22" title="">
+													<img src="img/facebox/22.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/23" title="">
+													<img src="img/facebox/23.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/24" title="">
+													<img src="img/facebox/24.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/25" title="">
+													<img src="img/facebox/25.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/26" title="">
+													<img src="img/facebox/26.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/27" title="">
+													<img src="img/facebox/27.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/28" title="">
+													<img src="img/facebox/28.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/29" title="">
+													<img src="img/facebox/29.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/30" title="">
+													<img src="img/facebox/30.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/31" title="">
+													<img src="img/facebox/31.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/32" title="">
+													<img src="img/facebox/32.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/33" title="">
+													<img src="img/facebox/33.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/34" title="">
+													<img src="img/facebox/34.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/35" title="">
+													<img src="img/facebox/35.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/36" title="">
+													<img src="img/facebox/36.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/37" title="">
+													<img src="img/facebox/37.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/38" title="">
+													<img src="img/facebox/38.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/39" title="">
+													<img src="img/facebox/39.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/40" title="">
+													<img src="img/facebox/40.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/41" title="">
+													<img src="img/facebox/41.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/42" title="">
+													<img src="img/facebox/42.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/43" title="">
+													<img src="img/facebox/43.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/44" title="">
+													<img src="img/facebox/44.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/45" title="">
+													<img src="img/facebox/45.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/46" title="">
+													<img src="img/facebox/46.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/47" title="">
+													<img src="img/facebox/47.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/48" title="">
+													<img src="img/facebox/48.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/49" title="">
+													<img src="img/facebox/49.gif" />
+												</a>
+											</li>
+											<li>
+												<a href="#" code="/50" title="">
+													<img src="img/facebox/50.gif" />
+												</a>
+											</li>
+
+										</ul>
+									</div>
+								</div>
+								<a href="#">
+									<img class="face" src="img/tool_2.png" />
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<img src="img/tool_1.png" />
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									<img src="img/tool_1 (2).png" />
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="rf_sendtext">
+						<textarea class="sendtext" placeholder="在此输入。。。。" maxlength="64"></textarea>
+					</div>
+					<div class="rf_action">
+						<div class="rf_send">
+							<a class="send_btn">发送</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
