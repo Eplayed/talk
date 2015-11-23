@@ -7,58 +7,75 @@
 		<link rel="stylesheet" href="img/public.css" />
 		<link rel="stylesheet" href="img/register.css" />
 		<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
-		<script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="js/messages_zh.min.js"></script>
+		<script type="text/javascript">
 			$(function() {
-				$(".rg_btn").click(function() {
-					var username = $(".username").val();
-					var psw = $(".psw").val();
-					var aj = $.ajax({
-						url: '/regist_user',
-						type: 'post',
-						data: JSON.stringify({
-							'username': username,
-							'password': psw
-						}),
-						contentType: 'application/json;charset=utf-8',
-						dataType: 'json',
-						success: function(data) {
-							if (data['status'] == 'ok') {
-								location.href = 'login.html';
-							} else {
-								alert(data['status']);
-							}
-							//							
+				//validate 验证
+				$('#register').validate({
+					rules: {
+						username: {
+							required: true,
+							rangelength: [6, 12]
 						},
-						error: function(data) {
-							// view("异常！");  
-							alert("异常！" + data);
+						psw: {
+							required: true,
+							rangelength: [6, 12]
+						},
+						pswagain: {
+							required: true,
+							rangelength: [6, 12],
+							equalTo: 'input[name="psw"]'
 						}
-					});
-				})
+					},
+					submitHandler: function(form) {
+						var username = $(".username").val();
+						var psw = $(".psw").val();
+						//							//var phone = $(".phone").val();
+						aj = $.ajax({
+							url: '/regist_user',
+							type: 'post',
+							data: JSON.stringify({
+								'username': username,
+								'password': psw,
+								//'phone_num':phone
+							}),
+							contentType: 'application/json;charset=utf-8',
+							dataType: 'json',
+							success: function(data) {
+								console.log(data)
+								if (data['status'] == 'ok') {
+									location.href = 'login.html';
+									alert("注册账户成功！")
+								} else {
+									alert(data['status']);
+								}
+							},
+							error: function(data) {
+								// view("异常！");  
+								alert("异常！" + data);
+							}
+						});
+					}
+				});
+				//提交AJAX
 				$('.back').click(function() {
 					location.href = "login.html"
 				})
-			})
+			});
 		</script>
 	</head>
 
 	<body>
-		<h2 class="index"><a href="login.html">首页</a></h2>
+
 		<div class="register_box">
-			<p>注册</p>
-			<br />
-			<br />
-			<div class="register">
-				用户名:
-				<input class="username" type="text" />
-				<br />
-				<br /> 密码:　
-				<input class="psw" type="text" />
-				<br />
-				<br />
-				<input class="rg_btn btn_style" type="submit" value="注册" />
-				<input class="back btn_style" type="button" value="返回" />
-			</div>
+			<p>注册账户</p>
+			<form id="register">
+				<input class="username text" type="text" name="username" placeholder="账号" />
+				<input class="psw text" type="password" name="psw" placeholder="密码" />
+				<input class="pswagain text" type="password" name="pswagain" placeholder="重复密码" />
+				<input class="submit" type="submit" value="提交" />
+			</form>
 		</div>
 	</body>
 

@@ -1,5 +1,6 @@
-.index a{
-	font-size: 20px;
+.register_box p{
+	font-size: 24px;
+	color: #fff;
 }
 .register_box{
 	height: 500px;
@@ -10,17 +11,26 @@
 	margin-left: -250px;
 	top: 50%;
 	margin-top: -250px;
-	box-shadow: 0px 5px 5px #1D1D1D;
+
+
 }
-.register{
-	
-	position: absolute;
-	top: 25%;
-	left: 27%;
-	color: #fff;
+#register{
+    width: 350px; 
+    margin:100px auto;
+    	overflow: hidden;
 }
-.register input{
-border-radius: 3px;	
+#register input.text{
+width: 350px;
+height: 33px;
+    margin-bottom: 25px;
+    padding: 10px;
+    font-size: 17px;
+}
+.register_box input.submit{
+	    width: 350px;
+    height: 48px;
+    font-size: 24px;
+    margin: 30px auto;
 }
 p{
 	font-size: 24px;
@@ -28,13 +38,4 @@ p{
 	color: #eee;
 }
 
-.btn_style{
-	width: 80px;
-	
-	margin: 30px 0 0 20px;
-}
-.btn_style:hover{
-	background: #4CAE4C;
-	color: #eee;
-	cursor: pointer;
-}
+

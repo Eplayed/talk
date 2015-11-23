@@ -6,75 +6,60 @@
 		<title>Ichat</title>
 		<link rel="stylesheet" href="img/login.css" />
 		<link rel="stylesheet" href="img/public.css" />
-		<script type="text/javascript" src="js/jquery-2.1.4.js">
-		</script>
-		<script>
-			 //			var  Arraycolor = new 
-			 //			 Array("#00FF66", "#FFFF99", "#99CCFF", "#FFCCFF", "#FFCC99", "#00FFFF", "#FFFF00", "#FFCC00", "#FF00FF"); 
-			 //			var  n = 0; 
-			 //
-			 //			function  turncolors() {  
-			 //				n++;  
-			 //				if  (n == (Arraycolor.length - 1))  n = 0;  
-			 //				document.bgColor  =  Arraycolor[n];  
-			 //				setTimeout("turncolors()", 1000); 
-			 //			} 
-			 //			turncolors(); 
+		<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="js/messages_zh.min.js"></script>
+		<script type="text/javascript">
 			$(function() {
 				$(document).keydown(function(event) {
 					if (event.keyCode == 13) {
 						$('.button').click();
 					}
-				})
-				$('.text').click(function() {
-					$('.land').fadeIn(1200);
-					$('.start').fadeOut()
-					$(this).fadeOut();
-				})
-				$(".button").click(function() {
-					var username = $(".username").val();
-					//					alert(username);
-					var psw = $(".psw").val();
-					if (username === '' || psw === '') {
-						alert("用户名和密码不能为空！");
-					} else {
-						if (username.length > 0 && username.length < 6) {
-							alert("用户名和密码不能小于6位");
-						} else {
-							if (username.length >= 14 && psw.length >= 14) {
-								alert("用户名和密码不能大于14位");
-							} else {
-								$.ajax({
-									url: '/login',
-									data: JSON.stringify({
-										'type': 'username_password',
-										'username': username,
-										'password': psw
-									}),
-									//data:"{'type':'username_password','username':'hello0', 'password':'111111'}",
-									type: 'post',
-									contentType: 'application/json',
-									dataType: 'json',
-									success: function(data) {
-										console.log(data);
-										if (data['status'] == 'ok') {
-											sessionStorage['username'] = username;
-											sessionStorage['password'] = psw;
-											location.href = 'index.html';
-										} else {
-											alert(data['status']);
-										}
-									},
-									error: function(data) {
-										// view("异常！");  
-										alert("异常！" + data['status']);
-									}
-								});
-							}
+				});
+				$('#form').validate({
+					rules: {
+						username: {
+							required: true,
+							rangelength: [6, 12]
+						},
+						psw: {
+							required: true,
+							rangelength: [6, 12]
 						}
+					},
+					submitHandler: function(form) {
+						var username = $(".username").val();
+						var psw = $(".psw").val();
+						$.ajax({
+							url: '/login',
+							data: JSON.stringify({
+								'type': 'username_password',
+								'username': username,
+								'password': psw
+							}),
+							//data:"{'type':'username_password','username':'hello0', 'password':'111111'}",
+							type: 'post',
+							contentType: 'application/json',
+							dataType: 'json',
+							success: function(data) {
+								console.log(data);
+								if (data['status'] == 'ok') {
+									sessionStorage['username'] = username;
+									sessionStorage['password'] = psw;
+									location.href = 'index.html';
+								} else {
+									alert(data['status']);
+								}
+							},
+							error: function(data) {
+								// view("异常！");  
+								alert("异常！" + data['status']);
+							}
+						});
 					}
-				})
-			})
+				});
+				//jquery结束
+			});
 
 			function code(str) {
 				var re = /[~#^$@%&!*]/
@@ -86,58 +71,31 @@
 	</head>
 
 	<body>
-		<div class="text">
-			<div class='G'>G</div>
-			<div class="O">O</div>
-		</div>
 		<div class="login_foooter">
+			<a href="#">
+				重设密码
+					</a>
 			<a class="login_enroll" href="register.html">
-					　　	注册　　
+					注册账户
 					</a>
-			<a class="login_enroll" href="#">
-					　忘记密码　
-					</a>
-		</div>
-		
-			<div class="start">
-				<div class="spinner-container container1">
-					<div class="circle1"></div>
-					<div class="circle2"></div>
-					<div class="circle3"></div>
-					<div class="circle4"></div>
-				</div>
-				<div class="spinner-container container2">
-					<div class="circle1"></div>
-					<div class="circle2"></div>
-					<div class="circle3"></div>
-					<div class="circle4"></div>
-				</div>
-				<div class="spinner-container container3">
-					<div class="circle1"></div>
-					<div class="circle2"></div>
-					<div class="circle3"></div>
-					<div class="circle4"></div>
-				</div>
-			</div>
-		
-		<div class="logo">iCHAT</div>
-		<div class="land_box">
 
-			<div class="land">
-				<from class="from">
-					<span>账号：</span>
-					<input class="accoundtNum username" id="btnUser" type="text" name="accountNum" min="6" max="20" />
-					<br />
-					<br />
-					<span>密码：</span>
-					<input class="accoundtNum psw" type="password" name="password" min="6" max="20" />
-					<br />
-					<br />
-					<input class="button" type="submit" onclick="code(btnUser.value);" value="Login" />
-					<br />
-					<br />
-					</form>
-			</div>
+		</div>
+
+		<div class="spinner"></div>
+		<div class="land_box">
+			<form id="form">
+				<input class="accoundtNum username" id="btnUser" type="text" name="username" />
+				<br />
+				<br />
+				<input class="accoundtNum psw" type="password" name="psw" />
+				<div>
+					<input type="checkbox" />
+					<p>记住密码</p>
+				</div>
+				<input class="button" type="submit" onclick="code(btnUser.value);" name="submit" value="Login" />
+				<br />
+				<br />
+			</form>
 
 		</div>
 	</body>

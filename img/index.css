@@ -1,68 +1,383 @@
+/*版型开始*/
+
+body,
+div,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+input,
+textarea,
+p {
+	margin: 0px;
+	padding: 0px;
+	font-size: 12px;
+	font-family: 微软雅黑;
+	color: #2E3238;
+}
+
+ul {
+	list-style: none;
+}
+
+img,
+a img {
+	border: none;
+	text-decoration: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+*a:hover {
+	text-decoration: underline;
+}
+
+
+/*版型结束*/
+
+
+/*背景*/
+
+body {
+	background: url(bkground.png);
+	overflow: hidden;
+}
+
+
+/*遮盖层*/
+
+.mask {
+	height: 100%;
+	width: 1000px;
+	position: absolute;
+	top: 70px;
+	left: 183px;
+	background: rgba(0, 0, 0, 0.5);
+	display: none;
+	z-index: 3;
+}
+
+.mask.now {
+	display: block;
+}
+
+
+/*主体*/
+
 #main {
 	width: 1000px;
 	height: 100%;
 	z-index: 2;
-	background: blue;
+	background: ;
 	left: 50%;
 	margin-left: -500px;
 	position: absolute;
+	box-shadow: 0 0 20px rgb(178, 214, 142);
 }
-#headimg {
-	height: 120px;
-	width: 300px;
-	background: ;
+
+
+/*添加好友页面 新 左*/
+
+.addleft {
+	height: 100%;
+	width: 279px;
+	border-right: 1px solid #eee;
 	position: absolute;
-	left: 40%;
-	top: 20%;
-	z-index: 999;
-	box-shadow: 0 5px 3px #354453;
+	left: 0;
+	background: #fff;
+	visibility: visible;
+	transform: translate(-250%, 0);
+	transition: all 0.5s;
+}
+
+.addleft.effect-0 {
+	visibility: visible;
+	transform: translate(0, 0);
+}
+
+.addleft .addsearch {
+	border-bottom: 1px solid #eee;
+	position: absolute;
+	top: 21px;
+	left: 49px;
+}
+
+
+/*返回*/
+
+.addleft .addback {
+	cursor: pointer;
+}
+
+.addleft .addsearch em {}
+
+.addleft .addleft_head {
+	height: 70px;
+	background: rgb(178, 214, 142);
+}
+
+.addleft .addleft_head .searchText {
+	font-size: 17px;
+	height: 25px;
+	width: 191px;
+	background: rgb(178, 214, 142);
+	border-style: none;
+	resize: none;
+	outline: none;
+}
+
+.addleft .addleft_head span {
+	position: absolute;
+	top: 28px;
+	left: 20px;
+}
+
+
+/*查找到的用户列表样式*/
+
+.addleft_userList {
+	width: 100%;
+	position: absolute;
+	    top: 70px;
+	    bottom: 0;
+	    overflow: auto;
+}
+
+.addleft_userList ul li {
+	height: 50px;
+	cursor: pointer;
+	padding: 10px 0 0 25px;
+	border-bottom: 1px solid #c2c2c2;
+}
+
+.addleft_userList ul li h3 {
+	font-size: 16px;
+	margin-left: 60px;
+	color: #2E3238;
+}
+
+
+/*添加页面  右边*/
+
+.addright {
+	z-index: 2;
+	height: 100%;
+	width: 720px;
+	position: absolute;
+	right: 0;
+	background: #fff;
+	transition: all 0.5s;
+	transform: translate(250%, 0);
+}
+
+.addright.effect-0 {
+	visibility: visible;
+	transform: translate(0, 0);
+}
+
+.addright .addright_head {
+	height: 70px;
+	background: rgb(178, 214, 142);
+}
+
+.addright .valiText textarea {
+	height: 200px;
+	width: 680px;
+	margin: 20px;
+	font-size: 18px;
+	resize: none;
+	outline: none;
+}
+
+.addright .vali_btn {
+	height: 60px;
+	width: 680px;
+	background: rgb(178, 214, 142);
+	text-align: center;
+	font-size: 20px;
+	line-height: 60px;
+	margin: 20px;
+	color: #fff;
+	cursor: pointer;
+}
+
+
+/*添加好友界面列表*/
+
+.addFriend1 {
+	position: absolute;
+	left: 205px;
+	top: 70px;
+	z-index: 4;
 	display: none;
 }
+
+.addFriend1 .addlist {
+	background: #fff;
+	height: 140px;
+	width: 180px;
+	position: absolute;
+	border-radius: 8px;
+	z-index: 5;
+}
+
+.addFriend1 .addlist ul li {
+	height: 69px;
+	font-size: 19px;
+	line-height: 70px;
+	text-align: center;
+	cursor: pointer;
+	border-bottom: 1px solid #ccc;
+}
+
+.addlist_img {
+	height: 0;
+	width: 0;
+	margin-left: 10px;
+	border: solid 8px;
+	border-color: #808080 #808080 #fff #808080;
+}
+
+
+/*头像*/
+
+#headimg {
+	height: 200px;
+	width: 194px;
+	background: #fff;
+	position: absolute;
+	left: 229px;
+	top: 15%;
+	z-index: 999;
+	box-shadow: 0 0 3px #000;
+	display: none;
+	border-radius: 10px;
+	border: 1px solid #eee;
+}
+
+#headimg form {
+	padding: 20px;
+	font-size: 14px;
+}
+
 #imgDiv {
 	height: 120px;
 	width: 120px;
 	margin: 50px;
 }
+
 #imgDiv img {
 	height: 100%;
 	width: 100%;
 }
+
+
+/*左边样式*/
+
 #left {
 	height: 100%;
-	width: 280px;
-	background: #2E3238;
+	width: 279px;
+	background: #fff;
 	float: left;
+	border-right: 1px solid #eee;
 }
+
+
+/*右边样式*/
+
 #right {
 	height: 100%;
 	width: 720px;
-	background: #EEEEEE;
+	background: #fff;
 	float: left;
 }
+
 .left_header {
-	padding: 18px;
 	position: relative;
+	background-color: rgb(178, 214, 142);
+	height: 70px;
 }
-/*.left_header*/
+
+
+/*推送消息盒子*/
+
+.box {
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+	z-index: 999;
+}
+
+.box .messagePush_box {
+	height: 150px;
+	width: 220px;
+	/*background: -webkit-linear-gradient(top, #2E3238, #fff);*/
+	/*渐变*/
+	background: rgba(46, 50, 56, 0.9);
+	border-radius: 5px;
+	box-shadow: 0 0 10px #2CADCD;
+}
+
+.box .messagePush_box span.closeimg {
+	position: absolute;
+	height: 25px;
+	width: 25px;
+	right: 5px;
+	cursor: pointer;
+}
+
+.box .messagePush_box span img {
+	height: 100%;
+	width: 100%;
+}
+
+.box .push_message {
+	cursor: pointer;
+	width: 180px;
+	font-size: 18px;
+	padding: 27px;
+	text-align: center;
+	color: #FFF;
+}
+
+
+/*推送添加好友盒子*/
 
 .push_box {
 	height: 150px;
 	width: 220px;
-	background: -webkit-linear-gradient(top, #A2BEDB, #fff);
+	/*background: -webkit-linear-gradient(top, #2E3238, #fff);*/
+	background: rgba(46, 50, 56, 0.9);
 	position: absolute;
 	right: 0;
-	bottom: -150px;
+	bottom: 0;
+	color: #fff;
+	display: none;
 	z-index: 999;
+	box-shadow: 0 0 10px #2CADCD;
 	border-radius: 5px;
 }
+
 .push_box span.addf_r_list {
 	position: absolute;
 	left: 10px;
 	top: 10px;
 	font-size: 16px;
-	color: #2E3238;
-	line-height: 20px;
+	color: #FFF;
+	width: 150px line-height: 20px;
 }
+
 .push_box div.addtext {
 	height: 20px;
 	width: 100px;
@@ -74,6 +389,7 @@
 	left: 50%;
 	margin-left: -50px;
 }
+
 .push_box span.addtt {
 	float: left;
 	width: 50px;
@@ -82,34 +398,110 @@
 	cursor: pointer;
 	color: #2E3238;
 }
+
 .push_box span.addtt:hover {
 	box-shadow: 0px 0px 2px #2E3238;
 }
+
 .push_box span.closeimg {
 	position: absolute;
-	height: 25px;
-	width: 25px;
+	height: 10px;
+	width: 10px;
 	right: 0;
 	top: 0;
 	cursor: pointer;
 }
+
 .push_box span img {
 	height: 100%;
 	width: 100%;
 }
+
 .user img {
 	height: 40px;
 	width: 40px;
-	background: #10A56F;
+	background: ;
 	float: left;
 }
-.left_header .info h3 {
+
+.left_header .logo h3 {
 	font-weight: bold;
 	font-size: 20px;
-	margin-left: 60px;
 	color: #fff;
 }
-.left_header .exit {
+
+#left .search {
+	position: absolute;
+	right: 20px;
+	bottom: 10px;
+}
+#left .search_box{
+	position: absolute;
+    height: 69px;
+    width: 280px;
+    background: #B2D68E;
+    top: 0;
+    display: none;
+    border-bottom: 1px solid #eee;
+}
+#left .searchFriend{
+	font-size: 17px;
+    height: 25px;
+    width: 191px;
+    background: rgb(178, 214, 142);
+    border-style: none;
+    resize: none;
+    outline: none;
+    position: absolute;
+    top: 18px;
+    left: 52px;
+    border-bottom: 1px solid #fff;
+}
+#left .addFriend {
+	position: absolute;
+	left: 20px;
+	bottom: 10px;
+	cursor: pointer;
+}
+
+#left .logo {
+	padding: 25px 0 20px 99px;
+	width: 103px;
+}
+
+#left .searchBox{
+	border: 1px solid #eee;
+	position: absolute;
+	left: 22px;
+	background: #fff;
+}
+#left .searchBox li{
+	height: 50px;
+	cursor: pointer;
+	padding: 10px 0 0 25px;
+	border-bottom: 1px solid #c2c2c2;
+	list-style: none;
+}
+#left .searchBox li h3 {
+	font-size: 16px;
+	margin-left: 60px;
+	color: #2E3238;
+}
+/*最近历史消息*/
+
+
+/*#left .p{
+	height: 20px;
+	width: 20px;
+	background: red;
+	    margin: 0 0 0 61px;
+}*/
+
+
+/*退出按钮*/
+
+
+/*.left_header .exit {
 	height: 40px;
 	width: 40px;
 	background: ;
@@ -118,14 +510,20 @@
 	top: 20px;
 	cursor: pointer;
 }
+
 .left_header .exit img {
 	height: 100%;
 	width: 100%;
-}
+}*/
+
+
+/*搜索*/
+
 .left_search {
 	height: 30px;
 	width: 100%;
 }
+
 .left_search span.search_img {
 	height: 32px;
 	width: 32px;
@@ -133,10 +531,12 @@
 	position: absolute;
 	margin-left: 18px;
 }
+
 .left_search span.search_img img {
 	height: 100%;
 	width: 100%;
 }
+
 .left_search input {
 	height: 30px;
 	width: 180px;
@@ -147,6 +547,7 @@
 	border-color: #2E3238;
 	outline: 0;
 }
+
 .left_search .addFriend {
 	height: 30px;
 	width: 30px;
@@ -154,112 +555,188 @@
 	cursor: pointer;
 	margin-right: 10px;
 }
+
 .left_search .addFriend img {
 	height: 100%;
 	width: 100%;
 }
+
+#left .list_ul {
+	overflow-y: auto;
+	width: 279px;
+	height: 100%;
+}
+
 #left .tab ul {
 	height: 40px;
-	padding-left: 20px;
+	width: 279px;
 }
+
 #left .tab ul li {
 	height: 100%;
 	width: 80px;
 	cursor: pointer;
 	float: left;
-	margin: 20px 0 0 0;
+	margin: 10px 0 0 12px;
 }
+
 #left .tab ul li span {
-	height: 45px;
-	width: 45px;
 	background: ;
 	position: absolute;
 	margin-left: 21px;
 }
-#left .tab ul li span img {
+
+#left .tab ul li span.tab_touch {
+	height: 24px;
+	width: 30px;
+}
+
+#left .tab ul li span.tab_talk {
+	height: 20px;
+	width: 19px;
+}
+
+#left .tab ul li span.tab_chat {
+	height: 20px;
+	width: 19px;
+}
+
+#left .tab ul li span a {
+	display: inline-block;
 	height: 100%;
 	width: 100%;
 }
-#left .tab ul li span img.imgborder {
-	border-bottom: 2px solid #4283AF;
+
+#left .tab ul li span.tab_touch a {
+	background: url(chat.png);
 }
+
+#left .tab ul li span.tab_touch.imgborder a {
+	background: url(chat_sel.png);
+}
+
+#left .tab ul li span.tab_chat a {
+	background: url(contacts.png);
+}
+
+#left .tab ul li span.tab_chat.imgborder a {
+	background: url(contract_sel.png);
+}
+
+#left .tab ul li span.tab_talk a {
+	background: url(me.png);
+}
+
+#left .tab ul li span.tab_talk.imgborder a {
+	background: url(me_sel.png);
+}
+
 #left div.ul {
 	overflow-y: auto;
 }
+
+
+/*/好友导航/*/
+
+#left .tab {
+	position: absolute;
+	height: 42px;
+	bottom: 0;
+	background: #EEEEEE;
+}
+
+
+/*好友列表*/
+
 div.ul_talk ul li {
 	display: none;
 }
+
 div.ul_talk.current ul li {
 	display: block;
 }
-div.ul_talk ul {
-	margin-top: 40px;
+
+div.ul_talk.current ul li.libackground {
+	background: #eee;
 }
+
 div.ul_talk ul li {
 	height: 50px;
 	cursor: pointer;
-	padding: 18px 0 0 19px;
+	padding: 10px 0 0 25px;
+	border-bottom: 1px solid #c2c2c2;
 }
+
 div.ul_talk ul li h3 {
 	font-size: 16px;
 	margin-left: 60px;
-	color: #fff;
+	color: #2E3238;
 }
+
 div.ul_chat ul li {
 	display: none;
 }
+
 div.ul_chat.current ul li {
 	display: block;
 }
-div.ul_chat ul {
-	margin-top: 40px;
+
+div.ul_chat.current ul li.libackground {
+	background: #eee;
 }
+
 div.ul_chat ul li {
 	height: 50px;
 	cursor: pointer;
-	padding: 18px 0 0 19px;
+	padding: 10px 0 0 25px;
+	border-bottom: 1px solid #c2c2c2;
 }
+
 div.ul_chat ul li h3 {
 	font-size: 16px;
 	margin-left: 60px;
-	color: #fff;
+	color: #2E3238;
 }
+
 div.ul_touch ul li {
 	display: none;
 }
+
+div.ul_touch.current ul li.libackground {
+	background: #eee;
+}
+
 div.ul_touch.current ul li {
 	display: block;
 }
-div.ul_touch ul {
-	margin-top: 40px;
-}
+
 div.ul_touch ul li {
-	height: 50px;
-	width: 230px;
+	height: 48px;
 	cursor: pointer;
-	padding: 18px 0 0 19px;
+	padding: 10px 0 0 25px;
+	border-bottom: 1px solid #c2c2c2;
 }
-div.ul_touch ul li span.delfriend {
-	height: 30px;
-	width: 30px;
-	background: ;
-	float: right;
-	margin-top: -15px;
-	margin-right: -12px;
-}
-div.ul_touch ul li span.delfriend img {
-	height: 100%;
-	width: 100%;
-}
+
 div.ul_touch ul li h3 {
 	font-size: 16px;
 	margin-left: 60px;
-	color: #fff;
+	color: #2E3238;
 }
+
 ul li div.info {
-	width: 50%;
+	width: 73%;
 }
-body .addF_box {
+
+div.chater img {
+	height: 40px;
+	width: 40px;
+	float: left;
+}
+
+
+/*添加好友  旧*/
+
+body .addpeople_box {
 	height: 360px;
 	width: 460px;
 	position: absolute;
@@ -267,12 +744,65 @@ body .addF_box {
 	margin-left: -230px;
 	top: 50%;
 	margin-top: -180px;
-	background: #fff;
+	background: #2E3238;
 	z-index: 99;
 	border-radius: 5px;
 	display: none;
+	box-shadow: 0 0 20px #2CADCD;
 }
-body .addF_box img {
+
+body .addpeople_box .add_box {
+	height: 40px;
+	width: 420px;
+	background: ;
+	line-height: 40px;
+	position: relative;
+	border-right: none;
+}
+
+.addpeople_box .add_box ul li {
+	position: relative;
+	cursor: pointer;
+}
+
+body .addpeople_box .add_box .add_chat {
+	font-size: 21px;
+	text-align: center;
+	width: 33.3%;
+	float: left;
+	color: #fff;
+}
+
+body .addpeople_box .add_box .add_chat.showbox {
+	background: #2CADCD;
+}
+
+body .addpeople_box .add_box .add_friend {
+	font-size: 21px;
+	text-align: center;
+	width: 33.3%;
+	float: left;
+	color: #fff;
+}
+
+body .addpeople_box .add_box .add_friend.showbox {
+	background: #2CADCD;
+}
+
+body .addpeople_box .add_box .find_chat {
+	font-size: 21px;
+	text-align: center;
+	width: 33.3%;
+	height: 40px;
+	float: left;
+	color: #fff;
+}
+
+body .addpeople_box .add_box .find_chat.showbox {
+	background: #2CADCD;
+}
+
+body .addpeople_box img {
 	height: 40px;
 	width: 40px;
 	position: absolute;
@@ -280,53 +810,286 @@ body .addF_box img {
 	right: 0;
 	cursor: pointer;
 }
-body .addF_box .text_box {
-	text-align: center;
-}
-body .addF_box .add_btn {
+
+body .addpeople_box .friend_box {
+	display: none;
 	position: absolute;
-	bottom: 0;
+	height: 319px;
+	width: 460px;
+	margin-left: -1px;
+}
+
+.text_box {
+	color: #fff;
+}
+
+body .addpeople_box .friend_box.show .text_box {
+	text-align: center;
+	color: #fff;
+}
+
+body .addpeople_box .friend_box.show .add_btn {
+	position: absolute;
+	bottom: 10px;
 	left: 50%;
 	margin-left: -80px;
 }
-body .addF_box .add_btn input {
-	width: 80px;
+
+body .addpeople_box .friend_box.show .find_list {
+	height: 95px;
+	overflow: auto;
+	line-height: 20px;
 }
-body .addF_box .find_list span.span:hover {
-	background: #EEE;
+
+body .addpeople_box .friend_box.show .find_list span.span:hover {
+	background: #4283AF;
 	cursor: pointer;
 }
-body .addF_box .find_list span.border {
-	border: 1px solid #2E3238;
+
+body .addpeople_box .friend_box.show .find_list span.border {
+	border: 1px solid #fff;
 }
+
+body .addpeople_box .friend_box.show {
+	background: ;
+	display: block;
+}
+
+body .addpeople_box .chat_box {
+	display: none;
+	height: 319px;
+	width: 460px;
+	margin-left: -141px;
+	background: ;
+	color: #fff;
+}
+
+body .addpeople_box .chat_box.show {
+	background: ;
+	display: block;
+	position: absolute
+}
+
+body .addpeople_box .find_chat_box {
+	display: none;
+	height: 319px;
+	width: 460px;
+	margin-left: -281px;
+	background: ;
+	color: #fff;
+}
+
+body .addpeople_box .find_chat_box span:hover {
+	background: #4283AF;
+	cursor: pointer;
+}
+
+.span {
+	color: #fff;
+	display: block;
+}
+
+body .addpeople_box .find_chat_box.show {
+	display: block;
+	background: ;
+}
+
+body .addpeople_box input {
+	width: 80px;
+}
+
+
+/*发送图片*/
+
+input#sendimgflie {
+	position: absolute;
+	z-index: 100;
+	height: 32px;
+	width: 32px;
+	margin-top: -33px;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.remsg img {
+	position: relative;
+	min-width: 20px;
+	min-height: 20px;
+	max-width: 200px;
+}
+
+
+/*右边头部*/
+
 #right .right_header {
-	height: 6%;
-	background: ;
+	height: 70px;
+	width: 720px;
+	background: #B2D68E;
 }
-#right .right_header .right_header_title {
-	height: 40px;
-	background: ;
-	margin: 0 20px;
-	top: 5px;
-	border-bottom: 1px solid #D6D6D6;
+
+#right .right_header .right_header_title div.chat {
+	height: 11px;
+	width: 11px;
+	position: absolute;
+	right: 290px;
+	top: 25px;
+	border-bottom: 2px solid #fff;
+	border-left: 2px solid #fff;
+	transform: rotate(-45deg);
+	cursor: pointer;
+	display: none;
 }
+
+
+/*//箭头旋转*/
+
+#right .right_header .right_header_title div.chat.run {
+	transform: rotate(135deg);
+}
+
+#right .right_header .right_header_title div.chat span {
+	width: 80px;
+	position: absolute;
+	left: 23px;
+}
+
+#right .right_header .right_header_title div.chat div.removechat {
+	height: 20px;
+	width: 20px;
+}
+
+#right .right_header .right_header_title div.chat div.removechat img {
+	height: 100%;
+	width: 100%;
+}
+
 #right .right_header .right_header_title .title_text {
-	height: 40px;
+	height: 70px;
 	width: 50%;
 	text-align: center;
-	line-height: 40px;
+	line-height: 70px;
 	margin: 0 auto;
 	background: ;
 	font-size: 16px;
+	color: #fff;
 }
+
+#right .numpeople {
+	position: absolute;
+	top: 44px;
+	left: 63%;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+#right .numpeople div {
+	height: 10px;
+	width: 10px;
+	position: absolute;
+	border-bottom: 2px solid #fff;
+	border-left: 2px solid #fff;
+	transform: rotate(-45deg);
+	cursor: pointer;
+	top: 4px;
+	margin-left: 32px;
+}
+/*退出群组样式*/
+div.exit_chat {
+	height: 20px;
+	width: 20px;
+	position: absolute;
+	right: 36px;
+	top: 32px;
+	z-index: 11;
+	cursor: pointer;
+	display: none;
+}
+
+div.exit_chat img {
+	height: 100%;
+	width: 100%;
+}
+/*群组人员样式*/
+#right .peoples {
+	height: 60px;
+	width: 720px;
+	background: #fff;
+	position: absolute;
+	/* right: 24px; */
+	overflow: auto;
+	font-size: 15px;
+	display: none;
+	/* border-radius: 5px; */
+	z-index: 999;
+	border-bottom: 2px solid #eee;
+}
+
+#right .peoples>span {
+	margin-left: 10px;
+}
+/*用户功能样式*/
+#right .userSet {
+	background: #fff;
+	position: absolute;
+	width: 72%;
+	left: 280px;
+	z-index: 100;
+	border-bottom: 1px solid #eee;
+	display: none;
+}
+
+#right .userSet ul li {
+	text-align: center;
+	line-height: 40px;
+	font-size: 16px;
+	height: 60px;
+	width: 60px;
+	cursor: pointer;
+	float: left;
+}
+
+#right .userSet ul li img {
+	height: 100%;
+	width: 100%;
+}
+/*备注盒子样式*/
+.note_box {
+	height: 200px;
+	width: 200px;
+	background: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -100px;
+	margin-top: -100px;
+	border-radius: 8px;
+	display: none;
+	z-index: 101;
+}
+
+.note_box div.note_name_inp {
+	margin: 30px 0 30px 36px;
+}
+
+.note_box div.note_btn input {
+	width: 135px;
+	margin-top: 30px;
+}
+
+
+/*右边身体*/
+
 #right .right_body {
 	height: 69%;
 	background: ;
 	overflow: hidden;
 }
+
 #right .right_body .rb_text {
 	height: 90%;
 }
+
 #right .right_body div.msg_text {
 	height: 100%;
 	width: 96%;
@@ -334,142 +1097,205 @@ body .addF_box .find_list span.border {
 	background: ;
 	overflow: auto;
 }
-/*#right .right_body div.msg_my_style{
-	
-}*/
-/*#right .right_body div.msg_text .msg_my{
-	height: auto;
-	width: 200px;
-	background: #4D4948;
-	float: right;
 
-	color: #FFFFE7;
-	-webkit-border-radius:10px;  
-    -moz-border-radius:10px;
-	
-}*/
-/*#right .right_body div.msg_text .msg_fr{
-	
-	height: auto;
-	width: 200px;
-	background: green;
-	-webkit-border-radius:10px;  
-    -moz-border-radius:10px;
-	
-	
-	
-}*/
+
+/*聊天对话框气泡*/
 
 .msg_my_style {
 	width: 99%;
 	float: left;
+	position: relative;
 }
+
 .msg_my_style .msg_fr {
 	float: left;
-	background: #fff;
+	background: #eee;
 	border-radius: 5px;
 	/* 圆角 */
-	
 	margin-bottom: 0;
 	position: relative;
 	margin: 20px 0 0 9px;
 }
+
 .msg_my_style .msg_fr div.remsg {
 	font-size: 16px;
 	padding: 5px 10px;
 }
+
 .msg_my_style .msg_my div.remsg {
 	font-size: 16px;
 	padding: 5px 10px;
 }
+
 .msg_my_style .msg_my {
 	position: relative;
 	border-radius: 5px;
 	/* 圆角 */
-	
 	margin-bottom: 0;
-	background: #00AF60;
+	background: #B2D68E;
 	float: right;
 	margin: 20px 9px 0 0;
 }
+
 .msg_my div.arrow {
 	position: absolute;
 	top: 5px;
 	right: -16px;
 	/* 圆角的位置需要细心调试哦 */
-	
 	width: 0;
 	height: 0;
 	font-size: 0;
 	border: solid 8px;
-	border-color: #eee #eee #eee #00AF60;
+	border-color: #fff #fff #fff #B2D68E;
 }
+
 .msg_fr div.arrow {
 	position: absolute;
 	top: 5px;
 	left: -16px;
 	/* 圆角的位置需要细心调试哦 */
-	
 	width: 0;
 	height: 0;
 	font-size: 0;
 	border: solid 8px;
-	border-color: #eee #fff #eee #eee;
+	border-color: #fff #eee #fff #fff;
 }
+
+.myimg {
+	height: 30px;
+	width: 30px;
+	float: right;
+	margin: 20px 7px;
+}
+
+.myimg img {
+	height: 100%;
+	width: 100%;
+}
+
+.yourimg {
+	height: 30px;
+	width: 30px;
+	float: left;
+	margin: 20px 7px;
+}
+
+.yourimg img {
+	height: 100%;
+	width: 100%;
+}
+
+
+/*右边底部*/
+
 #right .right_foot {
 	height: 25%;
 	background: ;
 	margin-right: 20px;
-	border-top: 1px solid #D6D6D6;
+	border-top: 1px solid #B2D68E;
 }
+
 #right .right_foot .rf_tool {
 	height: 30px;
 	background: ;
 }
+
+#right .face {
+	height: 30px;
+	width: 30px;
+	position: absolute;
+	right: 0;
+	margin: 10px 25px 0 0;
+}
+
+#right .face img {
+	height: 100%;
+	width: 100%;
+}
+
 #right .right_foot .rf_tool ul {
 	margin-left: 10px;
 	margin-top: 10px;
 }
+
 #right .right_foot .rf_tool ul li {
 	height: 30px;
 	width: 30px;
 	background: ;
 	float: left;
 	cursor: pointer;
-	margin: 0px 5px 5px 0;
+	margin: 0px 0px 0px 32px;
 }
+/*表情盒子样式*/
 #right .right_foot .rf_tool ul li div.face_box {
 	width: 400px;
 	position: absolute;
-	bottom: 25%;
+	bottom: 18%;
 	background: #EEE;
 	display: none;
+	right: 1%;
 	box-shadow: 0px 0px 2px #494949;
 	border-radius: 5px;
 }
-#right .right_foot .rf_tool ul li a {
+
+#right .right_foot .rf_tool .face_box ul li {
 	height: 30px;
 	width: 30px;
+	background: ;
+	float: left;
+	cursor: pointer;
+	margin: 0px 5px 5px 0px;
 }
+
+#right .right_foot .rf_tool .face_box ul li a {
+	position: absolute;
+	height: 30px;
+	width: 30px;
+	cursor: pointer;
+}
+
+#right .right_foot .rf_tool ul li a {
+	position: absolute;
+	height: 25px;
+	width: 30px;
+	cursor: pointer
+}
+
+#right .right_foot .rf_tool ul li a img {
+	height: 100%;
+	width: 100%;
+}
+
+#right .right_foot .rf_tool ul span {
+	height: 30px;
+	width: 85px;
+	float: right;
+	margin-right: 93px;
+	color: #C1C1C1;
+}
+/*发送文本框*/
 #right .right_foot .rf_sendtext {
 	height: 6em;
 	background: ;
 }
+
 #right .right_foot .rf_sendtext .sendtext {
-	background: #EEEEEE;
+	background: #fff;
 	resize: none;
 	height: 100%;
 	width: 90%;
 	border: none;
 	outline: 0;
-	margin: 0 20px;
+	margin: 10px;
 }
+
 #right .right_foot .rf_action {
 	height: 30px;
 	background: ;
 	margin-top: 5px;
 	text-align: right;
 }
+
 #right .right_foot .rf_action .send_btn {
 	display: inline-block;
 	-webkit-border-radius: 4px;
@@ -478,4 +1304,71 @@ body .addF_box .find_list span.border {
 	padding: 5px 50px 5px 50px;
 	font-size: 14px;
 	cursor: pointer;
+	position: absolute;
+	right: 13px;
+	bottom: 10px;
 }
+
+
+/*退出确认*/
+
+.exitrd {
+	height: 144px;
+	width: 320px;
+	background: #2E3238;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -160px;
+	margin-top: -72px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px #2CADCD;
+	display: none;
+	z-index: 100;
+}
+
+.exitrd p {
+	font-size: 20px;
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+}
+
+.exitrd .exit_btn {
+	margin-left: 78px;
+}
+
+.exitrd .exit_btn input {
+	width: 80px;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+::-webkit-scrollbar-track {
+	background-color: rgba(73, 73, 73, 0.31);
+}
+
+
+/* 滚动条的滑轨背景颜色 */
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(178, 214, 142, 1);
+	border-radius: 8px;
+}
+
+
+/* 滑块颜色 */
+
+::-webkit-scrollbar-corner {
+	background-color: rgba(178, 214, 142);
+}
+
+
+/* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+
+::-webkit-scrollbar-button {}
+
+
+/* 滑轨两头的监听按钮颜色 */

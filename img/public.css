@@ -21,7 +21,7 @@ p {
 	padding: 0px;
 	font-size: 12px;
 	font-family: 微软雅黑;
-	color: #555;
+	color: #2E3238;
 	
 }
 ul {
@@ -41,8 +41,10 @@ a {
 /*版型结束*/
 
 body {
-	background:url(body_background.jpg);
+	background:rgb(178,214,142);
 	/*background-repeat: round;*/
 	overflow: hidden;
+	
+
 	
 }
