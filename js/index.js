@@ -497,7 +497,7 @@ $(function() {
 		
 		
 	});
-	//搜索好友TEXT框  自动匹配搜索结果
+	//搜索好友TEXT框  自动匹配搜索
 	$('.searchFriend').keyup(function(){
 		$(this).change(searchFriend());
 	})
